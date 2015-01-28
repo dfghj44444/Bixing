@@ -66,13 +66,14 @@ bool HelloWorld::init()
 	for (int i = 0 ;i < MENU_COUNT;i++)
 	{
 		auto* btnEvents = MenuItemImage::create( "btn.png" , "btn_.png" );
-	    btnEvents->setPosition(Vec2(origin.x  + btnEvents->getContentSize().width/2 + i *sizeScreen.width/4,
+        auto tmpScale = sizeScreen.width/MENU_COUNT/btnEvents->getContentSize().width;
+	    btnEvents->setPosition(Vec2(origin.x  + btnEvents->getContentSize().width/2*tmpScale + i *sizeScreen.width/4,
 			origin.y + btnEvents->getContentSize().height/2));
-		btnEvents->setScaleY(sizeScreen.width/MENU_COUNT/btnEvents->getContentSize().width);
+		btnEvents->setScaleX(tmpScale);
 	    theMenuItems[i]=btnEvents;
 	}
-	theMenuItems[0]->setCallback(CC_CALLBACK_1(HelloWorld::menuCallback,this));
-	theMenuItems[1]->setCallback(CC_CALLBACK_1(HelloWorld::onMenuMoney,this));
+	theMenuItems[0]->setCallback(CC_CALLBACK_1(HelloWorld::onMenuEvent ,this));
+	theMenuItems[1]->setCallback(CC_CALLBACK_1(HelloWorld::onMenuMoney ,this));
 	theMenuItems[2]->setCallback(CC_CALLBACK_1(HelloWorld::onMenuMember,this));
 	auto menu_ = Menu::create(theMenuItems[0], theMenuItems[1],theMenuItems[2],theMenuItems[3],nullptr);
 
@@ -94,7 +95,7 @@ void HelloWorld::menuCloseCallback(Ref* pSender)
     exit(0);
 #endif
 }
-//δ������Ϊ��Ϊ��ֹΪ��
+//Œ¥∂®“Â––Œ™£¨Œ™∑¿÷πŒ™ø’
 void HelloWorld::menuCallback(Ref* pSender)
 {
 	 MessageBox("thi btn hadnt bind to any callback","Alert");
@@ -102,9 +103,11 @@ void HelloWorld::menuCallback(Ref* pSender)
 //show events
 void HelloWorld::onMenuEvent(Ref* pSender)
 {
-   //make "add new event" shows
-//	auto* theInput = CCTextFieldTTF::create();
-   //make list of event shows
+    //make "add new event" shows
+    auto* theInput = CCTextFieldTTF::create();
+    theInput->setPosition(0, 0);
+    this->addChild(theInput);
+    //make list of event shows
 }
 //show money
 void HelloWorld::onMenuMoney(Ref* pSender)

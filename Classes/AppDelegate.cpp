@@ -21,11 +21,11 @@ bool AppDelegate::applicationDidFinishLaunching() {
     }	
 	
 //glview->setDesignResolutionSize(32,640, kResolutionNoBorder);
-	if(glview->isRetinaEnabled() && Application::getInstance()->getTargetPlatform() == Platform::OS_IPAD)
-	{
-		director->setContentScaleFactor(2);
-	
-	}
+//	if(/*glview->isRetinaEnabled() && */Application::getInstance()->getTargetPlatform() == Platform::OS_IPAD)
+//	{
+//		director->setContentScaleFactor(2);
+//	
+//	}
 
     // turn on display FPS
     director->setDisplayStats(true);
