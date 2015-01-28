@@ -17,6 +17,11 @@ public:
     
     // implement the "static create()" method manually
     CREATE_FUNC(HelloWorld);
+	//通用未定义回调，无实义
+	void menuCallback(Ref* pSender);
+	void onMenuEvent(Ref* pSender);
+	void onMenuMoney(Ref* pSender);
+	void onMenuMember(Ref* pSender);
 };
 
 #endif // __HELLOWORLD_SCENE_H__

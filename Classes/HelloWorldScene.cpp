@@ -34,20 +34,6 @@ bool HelloWorld::init()
     // 2. add a menu item with "X" image, which is clicked to quit the program
     //    you may modify it.
 
-    // add a "close" icon to exit the progress. it's an autorelease object
-    auto closeItem = MenuItemImage::create(
-                                           "CloseNormal.png",
-                                           "CloseSelected.png",
-                                           CC_CALLBACK_1(HelloWorld::menuCloseCallback, this));
-    
-	closeItem->setPosition(Vec2(origin.x + visibleSize.width - closeItem->getContentSize().width/2 ,
-                                origin.y + closeItem->getContentSize().height/2));
-
-    // create menu, it's an autorelease object
-    auto menu = Menu::create(closeItem, NULL);
-    menu->setPosition(Vec2::ZERO);
-    this->addChild(menu, 1);
-
     /////////////////////////////
     // 3. add your codes below...
 
@@ -72,6 +58,27 @@ bool HelloWorld::init()
     // add the sprite as a child to this layer
     this->addChild(sprite, 0);
     
+	auto sizeScreen = Director::getInstance()->getVisibleSize();
+	//add menu start
+	const int MENU_COUNT = 4;
+	MenuItemImage* theMenuItems[MENU_COUNT];
+	//the blow buttons
+	for (int i = 0 ;i < MENU_COUNT;i++)
+	{
+		auto* btnEvents = MenuItemImage::create( "btn.png" , "btn_.png" );
+	    btnEvents->setPosition(Vec2(origin.x  + btnEvents->getContentSize().width/2 + i *sizeScreen.width/4,
+			origin.y + btnEvents->getContentSize().height/2));
+		btnEvents->setScaleY(sizeScreen.width/MENU_COUNT/btnEvents->getContentSize().width);
+	    theMenuItems[i]=btnEvents;
+	}
+	theMenuItems[0]->setCallback(CC_CALLBACK_1(HelloWorld::menuCallback,this));
+	theMenuItems[1]->setCallback(CC_CALLBACK_1(HelloWorld::onMenuMoney,this));
+	theMenuItems[2]->setCallback(CC_CALLBACK_1(HelloWorld::onMenuMember,this));
+	auto menu_ = Menu::create(theMenuItems[0], theMenuItems[1],theMenuItems[2],theMenuItems[3],nullptr);
+
+	menu_->setPosition(0,0);
+	this->addChild(menu_, 0);
+	//add menu ended
     return true;
 }
 
@@ -82,10 +89,30 @@ void HelloWorld::menuCloseCallback(Ref* pSender)
 	MessageBox("You pressed the close button. Windows Store Apps do not implement a close button.","Alert");
     return;
 #endif
-
     Director::getInstance()->end();
-
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
     exit(0);
 #endif
+}
+//未定义行为，为防止为空
+void HelloWorld::menuCallback(Ref* pSender)
+{
+	 MessageBox("thi btn hadnt bind to any callback","Alert");
+}
+//show events
+void HelloWorld::onMenuEvent(Ref* pSender)
+{
+   //make "add new event" shows
+//	auto* theInput = CCTextFieldTTF::create();
+   //make list of event shows
+}
+//show money
+void HelloWorld::onMenuMoney(Ref* pSender)
+{
+
+}
+//show member
+void HelloWorld::onMenuMember(Ref* pSender)
+{
+
 }
