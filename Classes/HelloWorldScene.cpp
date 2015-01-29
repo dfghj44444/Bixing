@@ -12,7 +12,7 @@ Scene* HelloWorld::createScene()
 
     // add layer as a child to scene
     scene->addChild(layer);
-
+	//can be here, add 
     // return the scene
     return scene;
 }
@@ -103,7 +103,14 @@ void HelloWorld::menuCallback(Ref* pSender)
 void HelloWorld::onMenuEvent(Ref* pSender)
 {
    //make "add new event" shows
-//	auto* theInput = CCTextFieldTTF::create();
+	//簡單的建立和顯示
+	CCTextFieldTTF*  tf1 = CCTextFieldTTF::textFieldWithPlaceHolder("InputHere","Thonburi",50);
+	//設定顏色
+	tf1->setColor(ccc3(255,0,0));
+	//設定位置
+	tf1->setPosition(ccp(100,100));
+	//開啟文字輸入框
+	tf1->attachWithIME();
    //make list of event shows
 }
 //show money
