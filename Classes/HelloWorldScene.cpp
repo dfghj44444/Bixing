@@ -1,5 +1,5 @@
 #include "HelloWorldScene.h"
-
+#include "CursorTextField.h"
 USING_NS_CC;
 
 Scene* HelloWorld::createScene()
@@ -33,7 +33,7 @@ bool HelloWorld::init()
     /////////////////////////////
     // 2. add a menu item with "X" image, which is clicked to quit the program
     //    you may modify it.
-
+															
     /////////////////////////////
     // 3. add your codes below...
 
@@ -66,13 +66,14 @@ bool HelloWorld::init()
 	for (int i = 0 ;i < MENU_COUNT;i++)
 	{
 		auto* btnEvents = MenuItemImage::create( "btn.png" , "btn_.png" );
-	    btnEvents->setPosition(Vec2(origin.x  + btnEvents->getContentSize().width/2 + i *sizeScreen.width/4,
+        auto tmpScale = sizeScreen.width/MENU_COUNT/btnEvents->getContentSize().width;
+	    btnEvents->setPosition(Vec2(origin.x  + btnEvents->getContentSize().width/2*tmpScale + i *sizeScreen.width/4,
 			origin.y + btnEvents->getContentSize().height/2));
-		btnEvents->setScaleY(sizeScreen.width/MENU_COUNT/btnEvents->getContentSize().width);
+		btnEvents->setScaleX(tmpScale);
 	    theMenuItems[i]=btnEvents;
 	}
-	theMenuItems[0]->setCallback(CC_CALLBACK_1(HelloWorld::menuCallback,this));
-	theMenuItems[1]->setCallback(CC_CALLBACK_1(HelloWorld::onMenuMoney,this));
+	theMenuItems[0]->setCallback(CC_CALLBACK_1(HelloWorld::onMenuEvent ,this));
+	theMenuItems[1]->setCallback(CC_CALLBACK_1(HelloWorld::onMenuMoney ,this));
 	theMenuItems[2]->setCallback(CC_CALLBACK_1(HelloWorld::onMenuMember,this));
 	auto menu_ = Menu::create(theMenuItems[0], theMenuItems[1],theMenuItems[2],theMenuItems[3],nullptr);
 
@@ -94,7 +95,7 @@ void HelloWorld::menuCloseCallback(Ref* pSender)
     exit(0);
 #endif
 }
-//Î´¶¨ÒåÐÐÎª£¬Îª·ÀÖ¹Îª¿Õ
+//Å’Â¥âˆ‚Â®â€œÃ‚â€“â€“Å’â„¢Â£Â¨Å’â„¢âˆ‘Â¿Ã·Ï€Å’â„¢Ã¸â€?
 void HelloWorld::menuCallback(Ref* pSender)
 {
 	 MessageBox("thi btn hadnt bind to any callback","Alert");
@@ -102,6 +103,7 @@ void HelloWorld::menuCallback(Ref* pSender)
 //show events
 void HelloWorld::onMenuEvent(Ref* pSender)
 {
+
    //make "add new event" shows
 	//º††ÎµÄ½¨Á¢ºÍï@Ê¾
 	CCTextFieldTTF*  tf1 = CCTextFieldTTF::textFieldWithPlaceHolder("InputHere","Thonburi",50);
@@ -111,7 +113,17 @@ void HelloWorld::onMenuEvent(Ref* pSender)
 	tf1->setPosition(ccp(100,100));
 	//é_†¢ÎÄ×ÖÝ”Èë¿ò
 	tf1->attachWithIME();
+	this->addChild(tf1);
    //make list of event shows
+//----------------------------------------------------------------	
+    //make "add new event" shows
+ //   auto* theInput = CursorTextField::textFieldWithPlaceHolder("InputHere","Thonburi",50);
+	//tf1->setColor(ccc3(255,255,0));
+ //   theInput->setPosition(200,200);
+ //   this->addChild(theInput);
+    //make list of event shows
+//-----------------------------------------------------------------------------------
+
 }
 //show money
 void HelloWorld::onMenuMoney(Ref* pSender)
