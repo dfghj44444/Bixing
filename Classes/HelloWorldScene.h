@@ -2,6 +2,9 @@
 #define __HELLOWORLD_SCENE_H__
 
 #include "cocos2d.h"
+#include "ui/CocosGUI.h"
+#include "cocos-ext.h"
+USING_NS_CC;
 
 class HelloWorld : public cocos2d::Layer
 {
@@ -22,6 +25,7 @@ public:
 	void onMenuEvent(Ref* pSender);
 	void onMenuMoney(Ref* pSender);
 	void onMenuMember(Ref* pSender);
+	void selectedItemEvent(cocos2d::Ref *pSender, ui::ListView::EventType type);
 };
 
 #endif // __HELLOWORLD_SCENE_H__

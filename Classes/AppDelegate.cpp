@@ -1,6 +1,7 @@
 #include "AppDelegate.h"
 #include "HelloWorldScene.h"
 
+
 USING_NS_CC;
 
 AppDelegate::AppDelegate() {
@@ -20,7 +21,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
         director->setOpenGLView(glview);
     }	
 	
-//glview->setDesignResolutionSize(32,640, kResolutionNoBorder);
+//  glview->setDesignResolutionSize(32,640, kResolutionNoBorder);
 //	if(/*glview->isRetinaEnabled() && */Application::getInstance()->getTargetPlatform() == Platform::OS_IPAD)
 //	{
 //		director->setContentScaleFactor(2);
@@ -39,6 +40,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
 
     // run
     director->runWithScene(scene);
+
 
     return true;
 }
