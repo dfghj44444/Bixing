@@ -5,8 +5,8 @@
 #include "ui/CocosGUI.h"
 #include "cocos-ext.h"
 USING_NS_CC;
-
-class HelloWorld : public cocos2d::Layer
+using namespace cocos2d::extension;
+class HelloWorld : public cocos2d::Layer,cocos2d::extension::EditBoxDelegate
 {
 public:
     // there's no 'id' in cpp, so we recommend returning the class instance pointer
@@ -26,6 +26,11 @@ public:
 	void onMenuMoney(Ref* pSender);
 	void onMenuMember(Ref* pSender);
 	void selectedItemEvent(cocos2d::Ref *pSender, ui::ListView::EventType type);
+
+	virtual void editBoxEditingDidBegin(EditBox* editBox);                      //开始编辑
+	virtual void editBoxEditingDidEnd(EditBox* editBox);                        //结束编辑
+	virtual void editBoxTextChanged(EditBox* editBox, const std::string& text); //编辑框文字改变
+	virtual void editBoxReturn(EditBox* editBox);     
 };
 
 #endif // __HELLOWORLD_SCENE_H__

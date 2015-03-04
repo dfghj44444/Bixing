@@ -34,18 +34,7 @@ bool HelloWorld::init()
     Size visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
-    /////////////////////////////
-    // 2. add a menu item with "X" image, which is clicked to quit the program
-    //    you may modify it.
-															
-    /////////////////////////////
-    // 3. add your codes below...
-
-    // add a label shows "Hello World"
-    // create and initialize a label
-    
     auto label = LabelTTF::create("Hello World", "Arial", 24);
-    
     // position the label on the center of the screen
     label->setPosition(Vec2(origin.x + visibleSize.width/2,
                             origin.y + visibleSize.height - label->getContentSize().height));
@@ -84,9 +73,114 @@ bool HelloWorld::init()
 	menu_->setPosition(0,0);
 	this->addChild(menu_, 0);
 	//add menu ended
+
+	//add text input
+	CCSize editBoxSize = CCSizeMake(sizeScreen.width - 100, 60);
+
+	EditBox* editBoxName = EditBox::create(editBoxSize, Scale9Sprite::create("green_edit.png"));
+	editBoxName->setPosition( ccp(sizeScreen.width/2 , sizeScreen.height-30 ) );	 //左下角定位
+	this->addChild(editBoxName);
+
+	//属性设置
+	editBoxName->setFontName("fonts/Paint Boy.ttf");
+	editBoxName->setFontSize(20);
+	editBoxName->setFontColor(ccRED);
+	editBoxName->setPlaceHolder("Name:");
+	editBoxName->setPlaceholderFontColor(ccWHITE);
+	editBoxName->setMaxLength(8); //限制字符长度
+
+	//模式类型设置
+    editBoxName->setInputMode(EditBox::InputMode::SINGLE_LINE);
+	editBoxName->setInputFlag(EditBox::InputFlag::INTIAL_CAPS_ALL_CHARACTERS);
+	editBoxName->setReturnType(EditBox::KeyboardReturnType::DEFAULT);
+
+	//委托代理对象this
+	editBoxName->setDelegate(this);
+
+	//初始化list
+	{
+		std::vector<std::string>  _array;
+		for (int i = 0; i < 20; i++)
+			_array.push_back( StringUtils::format("listView_item_%d",i));
+
+		ui::ListView* listView = ui::ListView::create();
+		//SCROLLVIEW_DIR_VERTICAL  SCROLLVIEW_DIR_HORIZONTAL   
+		listView->setDirection(ui::ScrollView::Direction::VERTICAL);
+		listView->setTouchEnabled(true);
+		listView->setBounceEnabled(true);
+		//listView->setBackGroundImage("green.png");
+		listView->setBackGroundImageScale9Enabled(true);
+		listView->setSize(Size(sizeScreen.width, 260));
+		listView->setPosition(Point(0 , sizeScreen.height/2));
+		listView->addEventListener( CC_CALLBACK_2(HelloWorld::selectedItemEvent,this));
+		this->addChild(listView);
+
+		//create model
+		ui::Button* default_button = ui::Button::create("backtotopnormal.png","backtotoppressed.png");
+		default_button->setName("Title Button");
+		ui::Layout* default_item = ui::Layout::create();
+		default_item->setTouchEnabled(true);
+		default_item->setSize(default_button->getSize());
+		default_button->setPosition(Point(default_item->getSize().width / 2.0f, default_item->getSize().height / 2.0f));
+		default_item->addChild(default_button);
+		//set model ，模板
+		listView->setItemModel(default_item);
+
+		//add default item
+		ssize_t count = _array.size();
+		for ( int i = 0; i < count / 4; ++i ) 
+			listView->pushBackDefaultItem();
+		//insert default item
+		//for ( int i = 0; i < count / 4; ++i )
+		//	listView->insertDefaultItem(0);
+		
+		////add custom item	,这是和defaultitem长得不一样的
+		//for ( int i = 0 ; i < count / 4 ; ++i ) {
+		//	ui::Button* custom_button = ui::Button::create("button.png","buttonHighlighted.png");
+		//	custom_button->setName("Title Button");
+		//	custom_button->setScale9Enabled(true);
+		//	custom_button->setSize(default_button->getSize());
+
+		//	ui::Layout* custom_item = ui::Layout::create();
+		//	custom_item->setSize(custom_button->getSize());
+		//	custom_button->setPosition(Point(custom_item->getSize().width / 2.0f, custom_item->getSize().height / 2.0f));
+		//	custom_item->addChild(custom_button);
+		//	listView->pushBackCustomItem(custom_item);
+		//}
+
+		////insert custom item
+		//Vector<ui::Widget*>& items = listView->getItems();
+		//ssize_t items_count = items.size();
+		//for (int i = 0; i < count  / 4; ++i) {
+		//	ui::Button* custom_button = ui::Button::create("button.png","buttonHighlighted.png");
+		//	custom_button->setName("Title Button");
+		//	custom_button->setScale9Enabled(true);
+		//	custom_button->setSize(default_button->getSize());
+
+		//	ui::Layout* custom_item = ui::Layout::create();
+		//	custom_item->setSize(custom_button->getSize());
+		//	custom_button->setPosition(Point(custom_item->getSize().width / 2.0f, custom_item->getSize().height / 2.0f));
+		//	custom_item->addChild(custom_button);
+		//	listView->insertCustomItem(custom_item, items_count);
+		//}
+
+		////set item data
+		//items_count = items.size();
+		//for (int i = 0; i < items_count; ++i) {
+		//	ui::Widget* item = listView->getItem(i);
+		//	ui::Button* button = static_cast<ui::Button*>(item->getChildByName("Title Button"));
+		//	size_t index = listView->getIndex(item);
+		//	button->setTitleText(static_cast<std::string>(_array.at(index)).c_str());
+		//}
+
+		listView->removeLastItem();
+		//  listView->removeAllItems();
+		listView->setGravity( ui::ListView::Gravity::CENTER_VERTICAL);
+		listView->setItemsMargin(15.0f);
+	}
     return true;
 }
-
+				  
 
 void HelloWorld::menuCloseCallback(Ref* pSender)
 {
@@ -127,95 +221,6 @@ void HelloWorld::onMenuEvent(Ref* pSender)
  //   this->addChild(theInput);
     //make list of event shows
 //-----------------------------------------------------------------------------------
-	{
-		std::vector<std::string>  _array;
-		for (int i = 0; i < 20; i++) {
-
-			_array.push_back( StringUtils::format("listView_item_%d",i));
-		}
-
-		ui::ListView* listView = ui::ListView::create();
-		//SCROLLVIEW_DIR_VERTICAL  SCROLLVIEW_DIR_HORIZONTAL   
-		listView->setDirection(ui::ScrollView::Direction::VERTICAL);
-		listView->setTouchEnabled(true);
-		listView->setBounceEnabled(true);
-		listView->setBackGroundImage("green.png");
-		listView->setBackGroundImageScale9Enabled(true);
-		listView->setSize(Size(480, 260));
-		listView->setPosition(Point(200.f , 200.f));
-		listView->addEventListener( CC_CALLBACK_2(HelloWorld::selectedItemEvent,this));
-
-		this->addChild(listView);
-
-		//create model
-		ui::Button* default_button = ui::Button::create("backtotoppressed.png","backtotopnormal.png");
-		default_button->setName("Title Button");
-
-		ui::Layout* default_item = ui::Layout::create();
-		default_item->setTouchEnabled(true);
-		default_item->setSize(default_button->getSize());
-		default_button->setPosition(Point(default_item->getSize().width / 2.0f, default_item->getSize().height / 2.0f));
-		default_item->addChild(default_button);
-
-		//set model
-		listView->setItemModel(default_item);
-
-		//add default item
-		ssize_t count = _array.size();
-		for (int i = 0; i < count / 4; ++i) {
-			listView->pushBackDefaultItem();
-		}
-
-		//insert default item
-		for (int i = 0; i < count / 4; ++i) {
-			listView->insertDefaultItem(0);
-		}
-
-		//add custom item
-		for (int i = 0; i < count / 4; ++i) {
-			ui::Button* custom_button = ui::Button::create("button.png","buttonHighlighted.png");
-			custom_button->setName("Title Button");
-			custom_button->setScale9Enabled(true);
-			custom_button->setSize(default_button->getSize());
-
-			ui::Layout* custom_item = ui::Layout::create();
-			custom_item->setSize(custom_button->getSize());
-			custom_button->setPosition(Point(custom_item->getSize().width / 2.0f, custom_item->getSize().height / 2.0f));
-			custom_item->addChild(custom_button);
-			listView->pushBackCustomItem(custom_item);
-		}
-
-		//insert custom item
-		Vector<ui::Widget*>& items = listView->getItems();
-		ssize_t items_count = items.size();
-		for (int i = 0; i < count  / 4; ++i) {
-			ui::Button* custom_button = ui::Button::create("button.png","buttonHighlighted.png");
-			custom_button->setName("Title Button");
-			custom_button->setScale9Enabled(true);
-			custom_button->setSize(default_button->getSize());
-
-			ui::Layout* custom_item = ui::Layout::create();
-			custom_item->setSize(custom_button->getSize());
-			custom_button->setPosition(Point(custom_item->getSize().width / 2.0f, custom_item->getSize().height / 2.0f));
-			custom_item->addChild(custom_button);
-			listView->insertCustomItem(custom_item, items_count);
-		}
-
-		//set item data
-		items_count = items.size();
-		for (int i = 0; i < items_count; ++i) {
-			ui::Widget* item = listView->getItem(i);
-			ui::Button* button = static_cast<ui::Button*>(item->getChildByName("Title Button"));
-			size_t index = listView->getIndex(item);
-			button->setTitleText(static_cast<std::string>(_array.at(index)).c_str());
-		}
-
-		listView->removeLastItem();
-		//  listView->removeAllItems();
-		listView->setGravity( ui::ListView::Gravity::CENTER_VERTICAL);
-		listView->setItemsMargin(15.0f);
-
-	}
 
 }
 //show money
@@ -252,4 +257,24 @@ void HelloWorld::selectedItemEvent(cocos2d::Ref *pSender, ui::ListView::EventTyp
 	default:
 		break;
 	}
+}
+
+void HelloWorld::editBoxEditingDidBegin( EditBox* editBox )
+{
+
+}
+
+void HelloWorld::editBoxEditingDidEnd( EditBox* editBox )
+{
+	//如果有内容，则增加一条
+}
+
+void HelloWorld::editBoxTextChanged( EditBox* editBox, const std::string& text )
+{
+
+}
+
+void HelloWorld::editBoxReturn( EditBox* editBox )
+{
+
 }
