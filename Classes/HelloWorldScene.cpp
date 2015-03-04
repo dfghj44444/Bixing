@@ -172,7 +172,6 @@ void HelloWorld::onMenuEvent(Ref* pSender)
 		}
 
 		//add custom item
-
 		for (int i = 0; i < count / 4; ++i) {
 			ui::Button* custom_button = ui::Button::create("button.png","buttonHighlighted.png");
 			custom_button->setName("Title Button");
