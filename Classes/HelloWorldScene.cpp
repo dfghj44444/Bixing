@@ -1,4 +1,4 @@
-#include "HelloWorldScene.h"
+ï»¿#include "HelloWorldScene.h"
 #include "CursorTextField.h"
 #include "cocos2d.h"
 #include "cocos-ext.h"
@@ -34,27 +34,40 @@ bool HelloWorld::init()
     Size visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
-    auto label = LabelTTF::create("Hello World", "Arial", 24);
-    // position the label on the center of the screen
-    label->setPosition(Vec2(origin.x + visibleSize.width/2,
-                            origin.y + visibleSize.height - label->getContentSize().height));
+    //auto label = LabelTTF::create("Hello World", "Arial", 24);
+    //// position the label on the center of the screen
+    //label->setPosition(Vec2(origin.x + visibleSize.width/2,
+    //                        origin.y + visibleSize.height - label->getContentSize().height));
 
-    // add the label as a child to this layer
-    this->addChild(label, 1);
+    //// add the label as a child to this layer
+    //this->addChild(label, 1);
 
-    // add "HelloWorld" splash screen"
-    auto sprite = Sprite::create("HelloWorld.png");
+    //// add "HelloWorld" splash screen"
+    //auto sprite = Sprite::create("HelloWorld.png");
 
-    // position the sprite on the center of the screen
-    sprite->setPosition(Vec2(visibleSize.width/2 + origin.x, visibleSize.height/2 + origin.y));
+    //// position the sprite on the center of the screen
+    //sprite->setPosition(Vec2(visibleSize.width/2 + origin.x, visibleSize.height/2 + origin.y));
 
-    // add the sprite as a child to this layer
-    this->addChild(sprite, 0);
+    //// add the sprite as a child to this layer
+    //this->addChild(sprite, 0);
     
 	auto sizeScreen = Director::getInstance()->getVisibleSize();
 	//add menu start
 	const int MENU_COUNT = 4;
 	MenuItemImage* theMenuItems[MENU_COUNT];
+
+	//add text input
+	CCSize editBoxSize = CCSizeMake(sizeScreen.width - 50, 60);
+	EditBox* editBoxName = EditBox::create(editBoxSize, Scale9Sprite::create("green_edit.png"));
+	editBoxName->setPosition( ccp(sizeScreen.width/2 , sizeScreen.height-30 ) );	 //å·¦ä¸‹è§’å®šä½
+	this->addChild(editBoxName);
+	editBoxName->setFontName("fonts/Paint Boy.ttf");
+	editBoxName->setFontSize(20);
+	editBoxName->setFontColor(ccRED);
+	editBoxName->setPlaceHolder("è¾“å…¥æ–°ä»»åŠ¡åå›è½¦:");
+	editBoxName->setPlaceholderFontColor(ccWHITE);
+	editBoxName->setMaxLength(8); //é™åˆ¶å­—ç¬¦é•¿åº¦	
+	
 	//the blow buttons
 	for (int i = 0 ;i < MENU_COUNT;i++)
 	{
@@ -69,35 +82,19 @@ bool HelloWorld::init()
 	theMenuItems[1]->setCallback(CC_CALLBACK_1(HelloWorld::onMenuMoney ,this));
 	theMenuItems[2]->setCallback(CC_CALLBACK_1(HelloWorld::onMenuMember,this));
 	auto menu_ = Menu::create(theMenuItems[0], theMenuItems[1],theMenuItems[2],theMenuItems[3],nullptr);
-
 	menu_->setPosition(0,0);
 	this->addChild(menu_, 0);
 	//add menu ended
 
-	//add text input
-	CCSize editBoxSize = CCSizeMake(sizeScreen.width - 100, 60);
 
-	EditBox* editBoxName = EditBox::create(editBoxSize, Scale9Sprite::create("green_edit.png"));
-	editBoxName->setPosition( ccp(sizeScreen.width/2 , sizeScreen.height-30 ) );	 //×óÏÂ½Ç¶¨Î»
-	this->addChild(editBoxName);
-
-	//ÊôĞÔÉèÖÃ
-	editBoxName->setFontName("fonts/Paint Boy.ttf");
-	editBoxName->setFontSize(20);
-	editBoxName->setFontColor(ccRED);
-	editBoxName->setPlaceHolder("Name:");
-	editBoxName->setPlaceholderFontColor(ccWHITE);
-	editBoxName->setMaxLength(8); //ÏŞÖÆ×Ö·û³¤¶È
-
-	//Ä£Ê½ÀàĞÍÉèÖÃ
+	//æ¨¡å¼ç±»å‹è®¾ç½®
     editBoxName->setInputMode(EditBox::InputMode::SINGLE_LINE);
 	editBoxName->setInputFlag(EditBox::InputFlag::INTIAL_CAPS_ALL_CHARACTERS);
 	editBoxName->setReturnType(EditBox::KeyboardReturnType::DEFAULT);
-
-	//Î¯ÍĞ´úÀí¶ÔÏóthis
+	//å§”æ‰˜ä»£ç†å¯¹è±¡this
 	editBoxName->setDelegate(this);
 
-	//³õÊ¼»¯list
+	//åˆå§‹åŒ–list
 	{
 		std::vector<std::string>  _array;
 		for (int i = 0; i < 20; i++)
@@ -108,10 +105,10 @@ bool HelloWorld::init()
 		listView->setDirection(ui::ScrollView::Direction::VERTICAL);
 		listView->setTouchEnabled(true);
 		listView->setBounceEnabled(true);
-		//listView->setBackGroundImage("green.png");
+		listView->setBackGroundImage("green.png");
 		listView->setBackGroundImageScale9Enabled(true);
-		listView->setSize(Size(sizeScreen.width, 260));
-		listView->setPosition(Point(0 , sizeScreen.height/2));
+		listView->setSize(Size(sizeScreen.width, sizeScreen.height-200));
+		listView->setPosition(Point(0 , (sizeScreen.height-200)/2-300));
 		listView->addEventListener( CC_CALLBACK_2(HelloWorld::selectedItemEvent,this));
 		this->addChild(listView);
 
@@ -120,10 +117,10 @@ bool HelloWorld::init()
 		default_button->setName("Title Button");
 		ui::Layout* default_item = ui::Layout::create();
 		default_item->setTouchEnabled(true);
-		default_item->setSize(default_button->getSize());
+		default_item->setSize(Size(sizeScreen.width,default_button->getSize().height));
 		default_button->setPosition(Point(default_item->getSize().width / 2.0f, default_item->getSize().height / 2.0f));
 		default_item->addChild(default_button);
-		//set model £¬Ä£°å
+		//set model ï¼Œæ¨¡æ¿
 		listView->setItemModel(default_item);
 
 		//add default item
@@ -134,7 +131,7 @@ bool HelloWorld::init()
 		//for ( int i = 0; i < count / 4; ++i )
 		//	listView->insertDefaultItem(0);
 		
-		////add custom item	,ÕâÊÇºÍdefaultitem³¤µÃ²»Ò»ÑùµÄ
+		////add custom item	,è¿™æ˜¯å’Œdefaultitemé•¿å¾—ä¸ä¸€æ ·çš„
 		//for ( int i = 0 ; i < count / 4 ; ++i ) {
 		//	ui::Button* custom_button = ui::Button::create("button.png","buttonHighlighted.png");
 		//	custom_button->setName("Title Button");
@@ -149,29 +146,13 @@ bool HelloWorld::init()
 		//}
 
 		////insert custom item
-		//Vector<ui::Widget*>& items = listView->getItems();
-		//ssize_t items_count = items.size();
-		//for (int i = 0; i < count  / 4; ++i) {
-		//	ui::Button* custom_button = ui::Button::create("button.png","buttonHighlighted.png");
-		//	custom_button->setName("Title Button");
-		//	custom_button->setScale9Enabled(true);
-		//	custom_button->setSize(default_button->getSize());
-
-		//	ui::Layout* custom_item = ui::Layout::create();
-		//	custom_item->setSize(custom_button->getSize());
-		//	custom_button->setPosition(Point(custom_item->getSize().width / 2.0f, custom_item->getSize().height / 2.0f));
-		//	custom_item->addChild(custom_button);
-		//	listView->insertCustomItem(custom_item, items_count);
-		//}
-
-		////set item data
-		//items_count = items.size();
-		//for (int i = 0; i < items_count; ++i) {
-		//	ui::Widget* item = listView->getItem(i);
-		//	ui::Button* button = static_cast<ui::Button*>(item->getChildByName("Title Button"));
-		//	size_t index = listView->getIndex(item);
-		//	button->setTitleText(static_cast<std::string>(_array.at(index)).c_str());
-		//}
+		Vector<ui::Widget*>& items = listView->getItems();
+		for (int i = 0; i < items.size(); ++i) {
+			ui::Widget* item = listView->getItem(i);
+			ui::Button* button = static_cast<ui::Button*>(item->getChildByName("Title Button"));
+			size_t index = listView->getIndex(item);
+			button->setTitleText(static_cast<std::string>(_array.at(index)).c_str());
+		}
 
 		listView->removeLastItem();
 		//  listView->removeAllItems();
@@ -193,7 +174,7 @@ void HelloWorld::menuCloseCallback(Ref* pSender)
     exit(0);
 #endif
 }
-//Å’Â¥âˆ‚Â®â€œÃ‚â€“â€“Å’â„¢Â£Â¨Å’â„¢âˆ‘Â¿Ã·Ï€Å’â„¢Ã¸â€?
+//è‰—æ¥¼éˆ­å®î†¹â‚¬æºå‚—â‚¬æ’¯â‚¬æ’†æ†åŠ‰æ‹¢ç¯“è‰—éˆ©â‘©åœé©´æ¢…èŸºè‰—éˆ©â’šç³•â‚¬?
 void HelloWorld::menuCallback(Ref* pSender)
 {
 	 MessageBox("thi btn hadnt bind to any callback","Alert");
@@ -203,13 +184,13 @@ void HelloWorld::onMenuEvent(Ref* pSender)
 {
 
    //make "add new event" shows
-	//º††ÎµÄ½¨Á¢ºÍï@Ê¾
+	//ç°¡å–®çš„å»ºç«‹å’Œé¡¯ç¤º
 	CCTextFieldTTF*  tf1 = CCTextFieldTTF::textFieldWithPlaceHolder("InputHere","Thonburi",50);
-	//ÔO¶¨îÉ«
+	//è¨­å®šé¡è‰²
 	tf1->setColor(ccc3(255,0,0));
-	//ÔO¶¨Î»ÖÃ
+	//è¨­å®šä½ç½®
 	tf1->setPosition(ccp(100,100));
-	//é_†¢ÎÄ×Öİ”Èë¿ò
+	//é–‹å•Ÿæ–‡å­—è¼¸å…¥æ¡†
 	tf1->attachWithIME();
 	this->addChild(tf1);
    //make list of event shows
@@ -266,7 +247,7 @@ void HelloWorld::editBoxEditingDidBegin( EditBox* editBox )
 
 void HelloWorld::editBoxEditingDidEnd( EditBox* editBox )
 {
-	//Èç¹ûÓĞÄÚÈİ£¬ÔòÔö¼ÓÒ»Ìõ
+	//å¦‚æœæœ‰å†…å®¹ï¼Œåˆ™å¢åŠ ä¸€æ¡
 }
 
 void HelloWorld::editBoxTextChanged( EditBox* editBox, const std::string& text )
