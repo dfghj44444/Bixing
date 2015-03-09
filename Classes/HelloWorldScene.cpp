@@ -113,14 +113,29 @@ bool HelloWorld::init()
 		this->addChild(listView);
 		m_QuestList = listView;
 
-		//create model
-		ui::Button* default_button = ui::Button::create("backtotopnormal.png","backtotoppressed.png");
-		default_button->setName("Title Button");
+		//create model	
+		//标题
+
+		const int HEIGHT_ITEM = 30;
+
 		ui::Layout* default_item = ui::Layout::create();
 		default_item->setTouchEnabled(true);
-		default_item->setSize(Size(sizeScreen.width,default_button->getSize().height));
-		default_button->setPosition(Point(default_item->getSize().width / 2.0f, default_item->getSize().height / 2.0f));
+		default_item->setBackGroundImageScale9Enabled(true);
+		default_item->setBackGroundImage("ItemBg.png");
+		default_item->setSize(Size(sizeScreen.width,HEIGHT_ITEM*2));
+
+		ui::Button* default_button = ui::Button::create();
+		default_button->setName("Title");
+		default_button->setPosition(Point(default_item->getSize().width / 2.0f, HEIGHT_ITEM / 2.0f*3 ));
+		
+		//姓名和日期
+		ui::Button* btnSign	= ui::Button::create();
+		btnSign->setName("Sign");
+		btnSign->setPosition(Point(default_item->getSize().width / 2.0f, HEIGHT_ITEM / 2.0f));
+	   
 		default_item->addChild(default_button);
+		default_item->addChild(btnSign);
+
 		//set model ，模板
 		listView->setItemModel(default_item);
 
@@ -157,8 +172,8 @@ bool HelloWorld::init()
 
 		//  listView->removeLastItem();
 		//  listView->removeAllItems();
-		listView->setGravity( ui::ListView::Gravity::CENTER_VERTICAL);
-		listView->setItemsMargin(10.0f);
+		listView->setGravity( ui::ListView::Gravity::TOP);
+		listView->setItemsMargin(50.0f);
 	}
     return true;
 }
@@ -188,7 +203,7 @@ void HelloWorld::onMenuEvent(Ref* pSender)
 	//簡單的建立和顯示
 	CCTextFieldTTF*  tf1 = CCTextFieldTTF::textFieldWithPlaceHolder("InputHere","Thonburi",50);
 	//設定顏色
-	tf1->setColor(ccc3(255,0,0));
+	tf1->setColor( ccc3( 255 , 0 , 0 ) );
 	//設定位置
 	tf1->setPosition(ccp(100,100));
 	//開啟文字輸入框
@@ -256,9 +271,14 @@ void HelloWorld::editBoxEditingDidEnd( EditBox* editBox )
 	Vector<ui::Widget*>& items = m_QuestList->getItems();
 	int theLastIndex = items.size()-1;
 	ui::Widget* item = m_QuestList->getItem(theLastIndex);
-	ui::Button* button = static_cast<ui::Button*>(item->getChildByName("Title Button"));
+	ui::Button* button = static_cast<ui::Button*>(item->getChildByName("Title"));
 
 	button->setTitleText(static_cast<std::string>(theContent));
+
+	ui::Button* btnSign = static_cast<ui::Button*>(item->getChildByName("Sign"));
+
+	btnSign->setTitleText("xingmin:2015/3/5-205/4/6");
+	btnSign->setTitleColor(Color3B(0x00,0xff,0x80));
 }
 
 void HelloWorld::editBoxTextChanged( EditBox* editBox, const std::string& text )
