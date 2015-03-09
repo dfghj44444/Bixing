@@ -105,12 +105,13 @@ bool HelloWorld::init()
 		listView->setDirection(ui::ScrollView::Direction::VERTICAL);
 		listView->setTouchEnabled(true);
 		listView->setBounceEnabled(true);
-		listView->setBackGroundImage("green.png");
+		//listView->setBackGroundImage("green.png");
 		listView->setBackGroundImageScale9Enabled(true);
 		listView->setSize(Size(sizeScreen.width, sizeScreen.height-200));
 		listView->setPosition(Point(0 , (sizeScreen.height-200)/2-300));
 		listView->addEventListener( CC_CALLBACK_2(HelloWorld::selectedItemEvent,this));
 		this->addChild(listView);
+		m_QuestList = listView;
 
 		//create model
 		ui::Button* default_button = ui::Button::create("backtotopnormal.png","backtotoppressed.png");
@@ -124,9 +125,9 @@ bool HelloWorld::init()
 		listView->setItemModel(default_item);
 
 		//add default item
-		ssize_t count = _array.size();
-		for ( int i = 0; i < count / 4; ++i ) 
-			listView->pushBackDefaultItem();
+		//ssize_t count = _array.size();
+		//for ( int i = 0; i < count / 4; ++i ) 
+		//	listView->pushBackDefaultItem();
 		//insert default item
 		//for ( int i = 0; i < count / 4; ++i )
 		//	listView->insertDefaultItem(0);
@@ -146,18 +147,18 @@ bool HelloWorld::init()
 		//}
 
 		////insert custom item
-		Vector<ui::Widget*>& items = listView->getItems();
-		for (int i = 0; i < items.size(); ++i) {
-			ui::Widget* item = listView->getItem(i);
-			ui::Button* button = static_cast<ui::Button*>(item->getChildByName("Title Button"));
-			size_t index = listView->getIndex(item);
-			button->setTitleText(static_cast<std::string>(_array.at(index)).c_str());
-		}
+		//Vector<ui::Widget*>& items = listView->getItems();
+		//for (int i = 0; i < items.size(); ++i) {
+		//	ui::Widget* item = listView->getItem(i);
+		//	ui::Button* button = static_cast<ui::Button*>(item->getChildByName("Title Button"));
+		//	size_t index = listView->getIndex(item);
+		//	button->setTitleText(static_cast<std::string>(_array.at(index)).c_str());
+		//}
 
-		listView->removeLastItem();
+		//  listView->removeLastItem();
 		//  listView->removeAllItems();
 		listView->setGravity( ui::ListView::Gravity::CENTER_VERTICAL);
-		listView->setItemsMargin(15.0f);
+		listView->setItemsMargin(10.0f);
 	}
     return true;
 }
@@ -174,7 +175,7 @@ void HelloWorld::menuCloseCallback(Ref* pSender)
     exit(0);
 #endif
 }
-//艗楼鈭偮€溍傗€撯€撆掆劉拢篓艗鈩⑩垜驴梅蟺艗鈩⒚糕€?
+
 void HelloWorld::menuCallback(Ref* pSender)
 {
 	 MessageBox("thi btn hadnt bind to any callback","Alert");
@@ -248,6 +249,16 @@ void HelloWorld::editBoxEditingDidBegin( EditBox* editBox )
 void HelloWorld::editBoxEditingDidEnd( EditBox* editBox )
 {
 	//如果有内容，则增加一条
+    auto theContent = editBox->getText();
+
+	////insert custom item
+	m_QuestList->pushBackDefaultItem();		 
+	Vector<ui::Widget*>& items = m_QuestList->getItems();
+	int theLastIndex = items.size()-1;
+	ui::Widget* item = m_QuestList->getItem(theLastIndex);
+	ui::Button* button = static_cast<ui::Button*>(item->getChildByName("Title Button"));
+
+	button->setTitleText(static_cast<std::string>(theContent));
 }
 
 void HelloWorld::editBoxTextChanged( EditBox* editBox, const std::string& text )

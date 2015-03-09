@@ -31,6 +31,9 @@ public:
 	virtual void editBoxEditingDidEnd(EditBox* editBox);                        //结束编辑
 	virtual void editBoxTextChanged(EditBox* editBox, const std::string& text); //编辑框文字改变
 	virtual void editBoxReturn(EditBox* editBox);     
+
+protected:
+	ui::ListView* m_QuestList;
 };
 
 #endif // __HELLOWORLD_SCENE_H__
