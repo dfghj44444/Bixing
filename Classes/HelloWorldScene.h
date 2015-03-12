@@ -31,9 +31,21 @@ public:
 	virtual void editBoxEditingDidEnd(EditBox* editBox);                        //½áÊø±à¼­
 	virtual void editBoxTextChanged(EditBox* editBox, const std::string& text); //±à¼­¿òÎÄ×Ö¸Ä±ä
 	virtual void editBoxReturn(EditBox* editBox);     
-
+	void initPageQuest();
+	void initPageMoney();
+	void initPageMember();
+	void enablePage( int param1 );
 protected:
+	//ui in page quest
 	ui::ListView* m_QuestList;
+	cocos2d::extension::EditBox* m_inputQuest;
+
+	//ui in page money
+	ui::ListView* m_MoneyRecord;
+	
+	//ui in page member
+	ui::ListView* m_ListMember;
+	ui::Button*   m_CreateGroup;
 };
 
 #endif // __HELLOWORLD_SCENE_H__

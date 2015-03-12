@@ -30,6 +30,15 @@ bool HelloWorld::init()
     {
         return false;
     }
+
+	m_QuestList=nullptr;
+	m_MoneyRecord=nullptr;
+	m_ListMember=nullptr;
+
+	initPageQuest();
+	initPageMoney();
+	initPageMember();
+	enablePage(2);//show page quest
     
     Size visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
@@ -56,18 +65,6 @@ bool HelloWorld::init()
 	const int MENU_COUNT = 4;
 	MenuItemImage* theMenuItems[MENU_COUNT];
 
-	//add text input
-	CCSize editBoxSize = CCSizeMake(sizeScreen.width - 50, 60);
-	EditBox* editBoxName = EditBox::create(editBoxSize, Scale9Sprite::create("green_edit.png"));
-	editBoxName->setPosition( ccp(sizeScreen.width/2 , sizeScreen.height-30 ) );	 //左下角定位
-	this->addChild(editBoxName);
-	editBoxName->setFontName("fonts/Paint Boy.ttf");
-	editBoxName->setFontSize(20);
-	editBoxName->setFontColor(ccRED);
-	editBoxName->setPlaceHolder("输入新任务后回车:");
-	editBoxName->setPlaceholderFontColor(ccWHITE);
-	editBoxName->setMaxLength(8); //限制字符长度	
-	
 	//the blow buttons
 	for (int i = 0 ;i < MENU_COUNT;i++)
 	{
@@ -86,95 +83,6 @@ bool HelloWorld::init()
 	this->addChild(menu_, 0);
 	//add menu ended
 
-
-	//模式类型设置
-    editBoxName->setInputMode(EditBox::InputMode::SINGLE_LINE);
-	editBoxName->setInputFlag(EditBox::InputFlag::INTIAL_CAPS_ALL_CHARACTERS);
-	editBoxName->setReturnType(EditBox::KeyboardReturnType::DEFAULT);
-	//委托代理对象this
-	editBoxName->setDelegate(this);
-
-	//初始化list
-	{
-		std::vector<std::string>  _array;
-		for (int i = 0; i < 20; i++)
-			_array.push_back( StringUtils::format("listView_item_%d",i));
-
-		ui::ListView* listView = ui::ListView::create();
-		//SCROLLVIEW_DIR_VERTICAL  SCROLLVIEW_DIR_HORIZONTAL   
-		listView->setDirection(ui::ScrollView::Direction::VERTICAL);
-		listView->setTouchEnabled(true);
-		listView->setBounceEnabled(true);
-		//listView->setBackGroundImage("green.png");
-		listView->setBackGroundImageScale9Enabled(true);
-		listView->setSize(Size(sizeScreen.width, sizeScreen.height-200));
-		listView->setPosition(Point(0 , (sizeScreen.height-200)/2-300));
-		listView->addEventListener( CC_CALLBACK_2(HelloWorld::selectedItemEvent,this));
-		this->addChild(listView);
-		m_QuestList = listView;
-
-		//create model	
-		//标题
-
-		const int HEIGHT_ITEM = 30;
-
-		ui::Layout* default_item = ui::Layout::create();
-		default_item->setTouchEnabled(true);
-		default_item->setBackGroundImageScale9Enabled(true);
-		default_item->setBackGroundImage("ItemBg.png");
-		default_item->setSize(Size(sizeScreen.width,HEIGHT_ITEM*2));
-
-		ui::Button* default_button = ui::Button::create();
-		default_button->setName("Title");
-		default_button->setPosition(Point(default_item->getSize().width / 2.0f, HEIGHT_ITEM / 2.0f*3 ));
-		
-		//姓名和日期
-		ui::Button* btnSign	= ui::Button::create();
-		btnSign->setName("Sign");
-		btnSign->setPosition(Point(default_item->getSize().width / 2.0f, HEIGHT_ITEM / 2.0f));
-	   
-		default_item->addChild(default_button);
-		default_item->addChild(btnSign);
-
-		//set model ，模板
-		listView->setItemModel(default_item);
-
-		//add default item
-		//ssize_t count = _array.size();
-		//for ( int i = 0; i < count / 4; ++i ) 
-		//	listView->pushBackDefaultItem();
-		//insert default item
-		//for ( int i = 0; i < count / 4; ++i )
-		//	listView->insertDefaultItem(0);
-		
-		////add custom item	,这是和defaultitem长得不一样的
-		//for ( int i = 0 ; i < count / 4 ; ++i ) {
-		//	ui::Button* custom_button = ui::Button::create("button.png","buttonHighlighted.png");
-		//	custom_button->setName("Title Button");
-		//	custom_button->setScale9Enabled(true);
-		//	custom_button->setSize(default_button->getSize());
-
-		//	ui::Layout* custom_item = ui::Layout::create();
-		//	custom_item->setSize(custom_button->getSize());
-		//	custom_button->setPosition(Point(custom_item->getSize().width / 2.0f, custom_item->getSize().height / 2.0f));
-		//	custom_item->addChild(custom_button);
-		//	listView->pushBackCustomItem(custom_item);
-		//}
-
-		////insert custom item
-		//Vector<ui::Widget*>& items = listView->getItems();
-		//for (int i = 0; i < items.size(); ++i) {
-		//	ui::Widget* item = listView->getItem(i);
-		//	ui::Button* button = static_cast<ui::Button*>(item->getChildByName("Title Button"));
-		//	size_t index = listView->getIndex(item);
-		//	button->setTitleText(static_cast<std::string>(_array.at(index)).c_str());
-		//}
-
-		//  listView->removeLastItem();
-		//  listView->removeAllItems();
-		listView->setGravity( ui::ListView::Gravity::TOP);
-		listView->setItemsMargin(50.0f);
-	}
     return true;
 }
 				  
@@ -198,7 +106,6 @@ void HelloWorld::menuCallback(Ref* pSender)
 //show events
 void HelloWorld::onMenuEvent(Ref* pSender)
 {
-
    //make "add new event" shows
 	//簡單的建立和顯示
 	CCTextFieldTTF*  tf1 = CCTextFieldTTF::textFieldWithPlaceHolder("InputHere","Thonburi",50);
@@ -220,12 +127,12 @@ void HelloWorld::onMenuEvent(Ref* pSender)
 //-----------------------------------------------------------------------------------
 
 }
-//show money
+//show money and hide others
 void HelloWorld::onMenuMoney(Ref* pSender)
 {
 
 }
-//show member
+//show memberand hide others
 void HelloWorld::onMenuMember(Ref* pSender)
 {
 
@@ -289,4 +196,253 @@ void HelloWorld::editBoxTextChanged( EditBox* editBox, const std::string& text )
 void HelloWorld::editBoxReturn( EditBox* editBox )
 {
 
+}
+
+	
+void HelloWorld::initPageQuest()
+{
+	auto sizeScreen = Director::getInstance()->getVisibleSize();
+	//add text input
+	CCSize editBoxSize = CCSizeMake(sizeScreen.width - 50, 60);
+	EditBox* editBoxName = EditBox::create(editBoxSize, Scale9Sprite::create("green_edit.png"));
+	editBoxName->setPosition( ccp(sizeScreen.width/2 , sizeScreen.height-30 ) );	 //左下角定位
+	this->addChild(editBoxName);
+	editBoxName->setFontName("fonts/Paint Boy.ttf");
+	editBoxName->setFontSize(20);
+	editBoxName->setFontColor(ccRED);
+	editBoxName->setPlaceHolder("输入新任务后回车:");
+	editBoxName->setPlaceholderFontColor(ccWHITE);
+	editBoxName->setMaxLength(8); //限制字符长度	
+
+	//模式类型设置
+	editBoxName->setInputMode(EditBox::InputMode::SINGLE_LINE);
+	editBoxName->setInputFlag(EditBox::InputFlag::INTIAL_CAPS_ALL_CHARACTERS);
+	editBoxName->setReturnType(EditBox::KeyboardReturnType::DEFAULT);
+	//委托代理对象this
+	editBoxName->setDelegate(this);	
+	m_inputQuest = editBoxName;
+
+	//初始化list
+	std::vector<std::string>  _array;
+	for (int i = 0; i < 20; i++)
+		_array.push_back( StringUtils::format("listView_item_%d",i));
+
+	ui::ListView* listView = ui::ListView::create();
+	//SCROLLVIEW_DIR_VERTICAL  SCROLLVIEW_DIR_HORIZONTAL   
+	listView->setDirection(ui::ScrollView::Direction::VERTICAL);
+	listView->setTouchEnabled(true);
+	listView->setBounceEnabled(true);
+	//listView->setBackGroundImage("green.png");
+	listView->setBackGroundImageScale9Enabled(true);
+	listView->setSize(Size(sizeScreen.width, sizeScreen.height-200));
+	listView->setPosition(Point(0 , (sizeScreen.height-200)/2-300));
+	listView->addEventListener( CC_CALLBACK_2(HelloWorld::selectedItemEvent,this));
+	this->addChild(listView);
+	m_QuestList = listView;
+
+	//create model	
+	//标题
+	const int HEIGHT_ITEM = 30;
+	ui::Layout* default_item = ui::Layout::create();
+	default_item->setTouchEnabled(true);
+	default_item->setBackGroundImageScale9Enabled(true);
+	default_item->setBackGroundImage("ItemBg.png");
+	default_item->setSize(Size(sizeScreen.width,HEIGHT_ITEM*2));
+
+	ui::Button* default_button = ui::Button::create();
+	default_button->setName("Title");
+	default_button->setPosition(Point(default_item->getSize().width / 2.0f, HEIGHT_ITEM / 2.0f*3 ));
+
+	//姓名和日期
+	ui::Button* btnSign	= ui::Button::create();
+	btnSign->setName("Sign");
+	btnSign->setPosition(Point(default_item->getSize().width / 2.0f, HEIGHT_ITEM / 2.0f));
+
+	default_item->addChild(default_button);
+	default_item->addChild(btnSign);
+
+	//set model ，模板
+	listView->setItemModel(default_item);
+
+	//add default item
+	//ssize_t count = _array.size();
+	//for ( int i = 0; i < count / 4; ++i ) 
+	//	listView->pushBackDefaultItem();
+	//insert default item
+	//for ( int i = 0; i < count / 4; ++i )
+	//	listView->insertDefaultItem(0);
+
+	////add custom item	,这是和defaultitem长得不一样的
+	//for ( int i = 0 ; i < count / 4 ; ++i ) {
+	//	ui::Button* custom_button = ui::Button::create("button.png","buttonHighlighted.png");
+	//	custom_button->setName("Title Button");
+	//	custom_button->setScale9Enabled(true);
+	//	custom_button->setSize(default_button->getSize());
+
+	//	ui::Layout* custom_item = ui::Layout::create();
+	//	custom_item->setSize(custom_button->getSize());
+	//	custom_button->setPosition(Point(custom_item->getSize().width / 2.0f, custom_item->getSize().height / 2.0f));
+	//	custom_item->addChild(custom_button);
+	//	listView->pushBackCustomItem(custom_item);
+	//}
+
+	////insert custom item
+	//Vector<ui::Widget*>& items = listView->getItems();
+	//for (int i = 0; i < items.size(); ++i) {
+	//	ui::Widget* item = listView->getItem(i);
+	//	ui::Button* button = static_cast<ui::Button*>(item->getChildByName("Title Button"));
+	//	size_t index = listView->getIndex(item);
+	//	button->setTitleText(static_cast<std::string>(_array.at(index)).c_str());
+	//}
+
+	//  listView->removeLastItem();
+	//  listView->removeAllItems();
+	listView->setGravity( ui::ListView::Gravity::TOP);
+	listView->setItemsMargin(50.0f);
+}
+
+void HelloWorld::initPageMoney()
+{
+    Size visibleSize = Director::getInstance()->getVisibleSize();
+		auto sizeScreen = Director::getInstance()->getVisibleSize();
+	//初始化list
+	std::vector<std::string>  _array;
+	for (int i = 0; i < 20; i++)
+		_array.push_back( StringUtils::format("listView_item_%d",i));
+
+	ui::ListView* listView = ui::ListView::create();
+	//SCROLLVIEW_DIR_VERTICAL  SCROLLVIEW_DIR_HORIZONTAL   
+	listView->setDirection(ui::ScrollView::Direction::VERTICAL);
+	listView->setTouchEnabled(true);
+	listView->setBounceEnabled(true);
+	//listView->setBackGroundImage("green.png");
+	listView->setBackGroundImageScale9Enabled(true);
+	listView->setSize(Size(sizeScreen.width, sizeScreen.height-60));
+	listView->setPosition(Point(0 ,0));
+	listView->addEventListener( CC_CALLBACK_2(HelloWorld::selectedItemEvent,this));
+	this->addChild(listView);
+	
+	//create model	
+	//数额
+	const int HEIGHT_ITEM = 30;
+	ui::Layout* default_item = ui::Layout::create();
+	default_item->setTouchEnabled(true);
+	default_item->setBackGroundImageScale9Enabled(true);
+	default_item->setBackGroundImage("ItemBg.png");
+	default_item->setSize(Size(sizeScreen.width,HEIGHT_ITEM*2));
+
+	ui::Button* default_button = ui::Button::create();
+	default_button->setName("Title");
+	default_button->setPosition(Point(default_item->getSize().width / 2.0f, HEIGHT_ITEM / 2.0f*3 ));
+	default_button->setColor(ccc3(0x00,0x0f,0xf0));
+	//姓名和日期
+	ui::Button* btnSign	= ui::Button::create();
+	btnSign->setName("Sign");
+	btnSign->setPosition(Point(default_item->getSize().width / 2.0f, HEIGHT_ITEM / 2.0f));
+
+	default_item->addChild(default_button);
+	default_item->addChild(btnSign);
+
+	//set model ，模板
+	listView->setItemModel(default_item);
+
+	listView->setGravity( ui::ListView::Gravity::TOP);
+	listView->setItemsMargin(50.0f);
+
+	m_MoneyRecord = listView;
+
+	//造数据
+	for (int i = 0 ; i < 2; i++)
+	{
+		listView->pushBackDefaultItem();
+		Vector<ui::Widget*>& items = listView->getItems();
+		int theLastIndex = items.size()-1;
+		ui::Widget* item = listView->getItem(theLastIndex);
+		ui::Button* button = static_cast<ui::Button*>(item->getChildByName("Title"));
+		button->setTitleText(static_cast<std::string>("￥:100"));
+		ui::Button* btnSign = static_cast<ui::Button*>(item->getChildByName("Sign"));
+		btnSign->setTitleText("邢敏--写作<我与宗师二三事》:2015/3/5 ");
+		btnSign->setTitleColor(Color3B(0x00,0xff,0x80));
+	}
+}
+void HelloWorld::initPageMember()
+{
+	Size visibleSize = Director::getInstance()->getVisibleSize();
+		auto sizeScreen = Director::getInstance()->getVisibleSize();
+	//初始化list
+	std::vector<std::string>  _array;
+	for (int i = 0; i < 20; i++)
+		_array.push_back( StringUtils::format("listView_item_%d",i));
+
+	ui::ListView* listView = ui::ListView::create();
+	//SCROLLVIEW_DIR_VERTICAL  SCROLLVIEW_DIR_HORIZONTAL   
+	listView->setDirection(ui::ScrollView::Direction::VERTICAL);
+	listView->setTouchEnabled(true);
+	listView->setBounceEnabled(true);
+	//listView->setBackGroundImage("green.png");
+	listView->setBackGroundImageScale9Enabled(true);
+	listView->setSize(Size(sizeScreen.width, sizeScreen.height-200));
+	listView->setPosition(Point(0 , (sizeScreen.height-200)/2-300));
+	listView->addEventListener( CC_CALLBACK_2(HelloWorld::selectedItemEvent,this));
+	this->addChild(listView);
+
+	//create model	
+	//数额
+	const int HEIGHT_ITEM = 30;
+	ui::Layout* default_item = ui::Layout::create();
+	default_item->setTouchEnabled(true);
+	default_item->setBackGroundImageScale9Enabled(true);
+	default_item->setBackGroundImage("ItemBg.png");
+	default_item->setSize(Size(sizeScreen.width,HEIGHT_ITEM*2));
+
+	ui::Button* default_button = ui::Button::create();
+	default_button->setName("Title");
+	default_button->setPosition(Point(default_item->getSize().width / 2.0f, HEIGHT_ITEM / 2.0f*3 ));
+	default_button->setColor(ccc3(0x00,0xff,0xf0));
+	//姓名和日期
+	ui::Button* btnSign	= ui::Button::create();
+	btnSign->setName("Sign");
+	btnSign->setPosition(Point(default_item->getSize().width / 2.0f, HEIGHT_ITEM / 2.0f));
+
+	default_item->addChild(default_button);
+	default_item->addChild(btnSign);
+
+	//set model ，模板
+	listView->setItemModel(default_item);
+
+	listView->setGravity( ui::ListView::Gravity::TOP);
+	listView->setItemsMargin(50.0f);
+
+	m_ListMember = listView;
+
+	//造数据
+	std::string names[3] = {"panpan","xingmin","guoguo","+"};
+	for (int i = 0 ; i < 3; i++)
+	{
+		listView->pushBackDefaultItem();
+		Vector<ui::Widget*>& items = listView->getItems();
+		int theLastIndex = items.size()-1;
+		ui::Widget* item = listView->getItem(theLastIndex);
+		ui::Button* button = static_cast<ui::Button*>(item->getChildByName("Title"));
+		button->setTitleText(names[i]);
+		ui::Button* btnSign = static_cast<ui::Button*>(item->getChildByName("Sign"));
+		btnSign->setTitleText("加入日期:2015/3/5 ");
+		btnSign->setTitleColor(Color3B(0x00,0xff,0x80));
+	}
+
+	//ui::Button* button = ui::Button::create("btn_create.png")  ;
+	//button->setPosition(Point(button->getSize().wit , button->getSize().height));
+	//this->addChild(button);
+	//m_CreateGroup = button;
+}
+
+void HelloWorld::enablePage( int flgPage )
+{
+	m_inputQuest->setVisible(flgPage==0);
+	m_QuestList->setVisible(flgPage==0);
+
+	m_MoneyRecord->setVisible(flgPage == 1);
+
+	m_ListMember->setVisible(flgPage == 2) ;
+	m_CreateGroup->setVisible(flgPage == 2);
 }
