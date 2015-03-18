@@ -3,7 +3,7 @@
 #include "cocos2d.h"
 #include "cocos-ext.h"
 #include "ui/CocosGUI.h"	
-
+#include "InputWidget.h"
 USING_NS_CC;
 using namespace cocos2d::extension;  
 Scene* HelloWorld::createScene()
@@ -434,6 +434,11 @@ void HelloWorld::initPageMember()
 	//button->setPosition(Point(button->getSize().wit , button->getSize().height));
 	//this->addChild(button);
 	//m_CreateGroup = button;
+
+	//create a new
+	Layer* sc = InputWidget::create();
+	static_cast<InputWidget*>(sc)->SetShowType(0);	//不同的情形使用不同的输入类型，做模态
+	this->getParent()->addChild(sc);	   //使其和当前layer同级
 }
 
 void HelloWorld::enablePage( int flgPage )
