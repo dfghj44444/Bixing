@@ -6,5 +6,8 @@ public:
 	~DataController(void);
 
 	void Test();
+	void TestSQLQuery();
+	void TestSQLCreation();
+	void TestDefault();
 };
 

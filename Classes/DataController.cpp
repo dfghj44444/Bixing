@@ -1,8 +1,21 @@
-#include "DataController.h"
+ï»¿#include "DataController.h"
 #include "cocos2d.h"
 #include "sqlite3/include/sqlite3.h"
 USING_NS_CC;
 
+int callback(void* ,int nCount,char** pValue,char** pName)
+{
+	string s;
+	for(int i=0;i<nCount;i++)
+	{
+		s+=pName[i];
+		s+=":";
+		s+=pValue[i];
+		s+="\n";
+	}
+	cout<<s<<endl;
+	return 0;
+}
 
 DataController::DataController(void)
 {
@@ -21,59 +34,65 @@ void DataController::Test()
 	auto result = sqlite3_open(filename.c_str(), &pDB);  
 	CCLog(filename.c_str());  
 	if( result != SQLITE_OK )  
-		CCLog( "´ò¿ªÊý¾Ý¿âÊ§°Ü£¬´íÎóÂë:%d \n" , result, );  
+		CCLog( "æ‰“å¼€æ•°æ®åº“å¤±è´¥ï¼Œé”™è¯¯ç :%d \n" , result, );  
 	else  
-		CCLog("³É¹¦µØ´ò¿ªÁËÊý¾Ý¿â");   
+		CCLog("æˆåŠŸåœ°æ‰“å¼€äº†æ•°æ®åº“");   
 }
 
 void DataController::TestDefault()
 {
-
-
 	if ( CCUserDefault::sharedUserDefault()->getBoolForKey( "flag", false))
 	{
-		//ÓÐÊý¾Ý
-		std::string str = CCUserDefault::sharedUserDefault()->getStringForKey( "str", "null");   //È¡³östring
-		ttf->setString( str.c_str());    //½«×Ö·û´®µÄ±êÌâÉèÎªstr
+		//æœ‰æ•°æ®
+		std::string str = CCUserDefault::sharedUserDefault()->getStringForKey( "str", "null");   //å–å‡ºstring	
+		CCLog("å­˜å‚¨æ–‡ä»¶å·²å­˜åœ¨");
 	} 
 	else
 	{
-		//Ã»ÓÐÊý¾Ý
-		CCUserDefault::sharedUserDefault()->setStringForKey( "str", "now, hava data");   //Ð´Èë×Ö·û´®
-		CCUserDefault::sharedUserDefault()->setBoolForKey( "flag", true);        //Ð´Èëbool
-		CCUserDefault::sharedUserDefault()->flush();     //½«Êý¾Ý´æÈëxmlÀïÃæ, ²»¹ýÏÖÔÚÃ²ËÆ¿ÉÒÔ²»¼ÓÒ²¿ÉÒÔ
+		//æ²¡æœ‰æ•°æ®
+		CCUserDefault::sharedUserDefault()->setStringForKey( "str", "now, hava data");   //å†™å…¥å­—ç¬¦ä¸²
+		CCUserDefault::sharedUserDefault()->setBoolForKey( "flag", true);        //å†™å…¥bool
+		CCUserDefault::sharedUserDefault()->flush();     //å°†æ•°æ®å­˜å…¥xmlé‡Œé¢, ä¸è¿‡çŽ°åœ¨è²Œä¼¼å¯ä»¥ä¸åŠ ä¹Ÿå¯ä»¥
+		CCLog("å­˜å‚¨æ–‡ä»¶ä¸å­˜åœ¨,å¤´æ¬¡å¼€å§‹åŠ è½½æ¸¸æˆ");
 	}
 }
 
 void DataController::TestSQLCreation()
 {
-
-	//´´½¨±í£¬ÉèÖÃIDÎªÖ÷¼ü£¬ÇÒ×Ô¶¯Ôö¼Ó  
-	result=sqlite3_exec( pDB, "create table MyTable_1( ID integer primary key autoincrement, name nvarchar(32) ) " , NULL, NULL, &errMsg );  
+	char errMsg = "Unknown";
+	sqlite3* pDB;
+	std::string filename = CCFileUtils::sharedFileUtils()->fullPathForFilename("test.db");  
+	auto result = sqlite3_open(filename.c_str(), &pDB); 
+	//åˆ›å»ºè¡¨ï¼Œè®¾ç½®IDä¸ºä¸»é”®ï¼Œä¸”è‡ªåŠ¨å¢žåŠ   
+	auto result=sqlite3_exec( pDB, "create table MyTable_1( ID integer primary key autoincrement, name nvarchar(32) ) " , NULL, NULL, &errMsg );  
 	if( result != SQLITE_OK )  
-		CCLog( "´´½¨±íÊ§°Ü£¬´íÎóÂë:%d £¬´íÎóÔ­Òò:%s\n" , result, errMsg );  
+		CCLog( "åˆ›å»ºè¡¨å¤±è´¥ï¼Œé”™è¯¯ç :%d ï¼Œé”™è¯¯åŽŸå› :%s\n" , result, errMsg );  
 
-	//²åÈëÊý¾Ý  
-	sqlstr=" insert into MyTable_1( name ) values ( '¿ËÈû' ) ";  
+	//æ’å…¥æ•°æ®
+	std::string sqlstr=" insert into MyTable_1( name ) values ( 'å…‹å¡ž' ) ";  
 	result = sqlite3_exec( pDB, sqlstr.c_str() , NULL, NULL, &errMsg );  
 	if(result != SQLITE_OK )  
-		CCLog( "²åÈë¼ÇÂ¼Ê§°Ü£¬´íÎóÂë:%d £¬´íÎóÔ­Òò:%s\n" , result, errMsg );  
+		CCLog( "æ’å…¥è®°å½•å¤±è´¥ï¼Œé”™è¯¯ç :%d ï¼Œé”™è¯¯åŽŸå› :%s\n" , result, errMsg );  
 
-	//²åÈëÊý¾Ý  
-	sqlstr=" insert into MyTable_1( name ) values ( 'ºùÂ«ÍÞ' ) ";  
+	//æ’å…¥æ•°æ®  
+	sqlstr=" insert into MyTable_1( name ) values ( 'è‘«èŠ¦å¨ƒ' ) ";  
 	result = sqlite3_exec( pDB, sqlstr.c_str() , NULL, NULL, &errMsg );  
 	if(result != SQLITE_OK )  
-		CCLog( "²åÈë¼ÇÂ¼Ê§°Ü£¬´íÎóÂë:%d £¬´íÎóÔ­Òò:%s\n" , result, errMsg );  
+		CCLog( "æ’å…¥è®°å½•å¤±è´¥ï¼Œé”™è¯¯ç :%d ï¼Œé”™è¯¯åŽŸå› :%s\n" , result, errMsg );  
 
-	//²åÈëÊý¾Ý  
-	sqlstr=" insert into MyTable_1( name ) values ( 'ÇæÌìÖù' ) ";  
+	//æ’å…¥æ•°æ®  
+	sqlstr=" insert into MyTable_1( name ) values ( 'æ“Žå¤©æŸ±' ) ";  
 	result = sqlite3_exec( pDB, sqlstr.c_str() , NULL, NULL, &errMsg );   
 	if(result != SQLITE_OK )   
-		CCLog( "²åÈë¼ÇÂ¼Ê§°Ü£¬´íÎóÂë:%d £¬´íÎóÔ­Òò:%s\n" , result, errMsg ); 
+		CCLog( "æ’å…¥è®°å½•å¤±è´¥ï¼Œé”™è¯¯ç :%d ï¼Œé”™è¯¯åŽŸå› :%s\n" , result, errMsg ); 
 }
 
-
-	//²éÑ¯
+void DataController::TestSQLQuery()
+{
+	sqlite3* db=nullptr;
+	char *zErrMsg = nullptr;
+	int rc;
+	//æŸ¥è¯¢
 	rc = sqlite3_open("test.db3", &db);  
 	if (rc == SQLITE_OK)  
 	{  
@@ -90,10 +109,39 @@ void DataController::TestSQLCreation()
 			, callback, 0, &zErrMsg);  
 		if (rc != SQLITE_OK) fprintf(stderr, "SQL error: %s\n", zErrMsg);  
 		sqlite3_close(db);  
-	} else {  
-		fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));  
+	}
+	else
+	{  
+		fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
 		sqlite3_close(db);  
-		return 1;  
 	}  
+}
 
+
+void Data::TestFile(){
+	//èŽ·å–FileUtileså¯¹è±¡
+	FileUtils *fileUtile=FileUtils::getInstance();
+	//æ˜¾ç¤ºshowView.pngå›¾ç‰‡çš„å…¨è·¯å¾„
+	std::string path=fileUtile->fullPathForFilename("showView.png");
+	//è¿›å…¥Documentsç›®å½•ä¸‹
+	std::string pathToSave=fileUtile->getWritablePath();
+	//æ·»åŠ åˆ°finderæ–‡ä»¶å¤¹
+	pathToSave +="finder";
+	CCLOG("pathToSave=%s",pathToSave.c_str());
+
+#if (CC_TARGET_PLATFORM != CC_PLATFORM_WIN32)
+	DIR *pDir = NULL;
+	//æ‰“å¼€è¯¥è·¯å¾„
+	pDir = opendir (pathToSave.c_str());
+	if (! pDir)
+	{
+		//åˆ›å»ºè¯¥è·¯å¾„
+		mkdir(pathToSave.c_str(), S_IRWXU | S_IRWXG | S_IRWXO);
+	}
+#else
+	if ((GetFileAttributesA(pathToSave.c_str())) == INVALID_FILE_ATTRIBUTES)
+	{
+		CreateDirectoryA(pathToSave.c_str(), 0);
+	}
+#endif
 }
