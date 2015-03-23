@@ -5,7 +5,7 @@ USING_NS_CC;
 
 int callback(void* ,int nCount,char** pValue,char** pName)
 {
-	string s;
+	std::string s;
 	for(int i=0;i<nCount;i++)
 	{
 		s+=pName[i];
@@ -13,7 +13,7 @@ int callback(void* ,int nCount,char** pValue,char** pName)
 		s+=pValue[i];
 		s+="\n";
 	}
-	cout<<s<<endl;
+	
 	return 0;
 }
 
