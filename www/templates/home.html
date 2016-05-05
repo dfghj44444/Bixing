@@ -1,0 +1,33 @@
+<ion-view>
+  <ion-content class="home">
+    <div>
+      <p class="home-title center-align">Create better apps faster</p>
+      <p class="home-subtitle center-align"> Build complete, secure and scalable backends in your browser piecing together APIs and features as building blocks.</p>
+    </div>
+    <div class="card">
+      <div class="item item-body center-align">
+        <p class="home-desc">
+          This is a starter kit for <a href="https://stamplay.com" target="_blank">Stamplay</a> using the Ionic framework. It features simple to-do like capabilities, with user accounts.
+        </p>
+      </div>
+    </div>
+    <div ng-hide="user === undefined">
+      <div ng-hide="user">
+        <div>
+          <button ui-sref="login" class="button button-full button-balanced bold">Login</button>
+          <button ui-sref="signup" class="button button-full button-positive bold">Signup</button>
+        </div>
+        <div class="center-align">
+          <b class="or">or</b>
+        </div>
+        <div>
+          <button ui-sref="tasks" class="button button-full button-dark bold">Continue as Guest</button>
+        </div>
+      </div>
+      <div ng-show="user" ng-controller="AccountController as account">
+        <button ui-sref="tasks" class="button button-full button-dark bold">My Tasks</button>
+        <button ng-click="account.logout()" class="button button-full button-stable bold">Logout</button>
+      </div>
+    </div>
+  </ion-content>
+</ion-view>

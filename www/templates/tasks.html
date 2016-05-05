@@ -1,0 +1,55 @@
+<ion-view>
+  <ion-nav-bar align-title="center" class="bar-light">
+    <ion-nav-back-button></ion-nav-back-button>
+    <ion-nav-title>
+      TASKS {{ '(' + task.tasks.length + ')' }}
+    </ion-nav-title>
+    <ion-nav-buttons side="right">
+      <a class="button button-icon icon ion-plus-circled" ui-sref="new"></a>
+    </ion-nav-buttons>
+  </ion-nav-bar>
+  <ion-content ng-init="task.fetch()">
+    <h1 class="account-title center-align">
+      <div ng-if="user">
+        Your Tasks
+      </div>
+      <div ng-if="!user && task.tasks !== undefined">
+       Community Tasks
+      </div>
+    </h1>
+    <ion-list can-swipe="true">
+      <ion-item ng-repeat="item in task.tasks" ng-class="{ 'active' : item.id === task.active }">
+        <div class="row">
+          <div class="col col-20" style="display: flex;justify-content: flex-end;align-items: center;">
+            <button class="button button-clear" style="font-size:2rem !important" ng-click="task.setStatus(item)">
+              <i class="ion ion-checkmark-circled" ng-class="{ 'balanced' : item.complete }"></i>
+            </button>
+          </div>
+          <div class="col col-80" on-tap="task.setActive(item._id)">
+            <h2>{{ item.title }}</h2>
+            <p>{{ item.body }}</p>
+            <label class="dark">
+              {{ item.dt_create | date : "short"}}
+            </label>
+        </div>
+      </div>
+      <ion-option-button class="button-energized ion-edit"
+      ui-sref="edit({ id : item._id })"></ion-option-button>
+      <ion-option-button class="button-assertive ion-trash-a"
+      ng-click="task.deleteTask(item._id)"></ion-option-button>
+      </ion-item>
+    </ion-list>
+
+    <div class="card" ng-show="task.tasks.length === 0">
+      <div class="item item-body center-align">
+        <h2 class="dark">
+          Umm..it's empty in here..
+        </h2>
+        <h2 class="dark">Try adding a task by clicking the <i class="ion-plus-circled dark"></i>
+        icon in the top right corner.</h2>
+      </div>
+    </div>
+
+
+  </ion-content>
+</ion-view>

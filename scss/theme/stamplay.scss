@@ -1,0 +1,100 @@
+body {
+  font-family: 'Roboto Condensed', sans-serif;
+}
+
+a {
+  color:#267871
+}
+
+.pane {
+    // background-color:#272D4E !important;
+    background: #136a8a; /* fallback for old browsers */ /* Chrome 10-25, Safari 5.1-6 */
+    background: -webkit-linear-gradient(right, #136a8a, #267871);
+    background: -o-linear-gradient(right, #136a8a, #267871);
+    background: linear-gradient(to left, #136a8a, #267871); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+
+.nav-title-icon {
+  height:40px;
+  padding:5px;
+}
+
+.account-title {
+    font-size:2em;
+    padding:30px 0 10px 0;
+    color:#f2f2f2;
+}
+
+.home {
+  &-title {
+    font-size:2em;
+    padding:30px 0 10px 0;
+    color:#f2f2f2;
+  }
+  &-subtitle {
+    font-size: 1.35em;
+    background-color:rgba(255, 255, 255, 0.35);
+    color:#ffffff;
+    padding:30px 15px;
+  }
+  &-desc {
+    font-size: 1.1em !important;
+  }
+}
+
+.item.active {
+
+  .item-content p {
+    white-space: normal !important;
+  }
+}
+.or {
+  color:#333;
+  background-color:rgba(255, 255, 255, 0.8);
+  padding:3px 6px 4px 6px;
+  border-radius:100%;
+}
+.center-align {
+  text-align: center;
+}
+
+.right-align {
+  text-align: right;
+}
+
+.text-purple {
+  color: #272D4E;
+}
+
+.bold {
+  font-weight: bold;
+}
+
+.button-balanced  {
+  background: #267871 !important;
+}
+.button-positive  {
+  background: #136a8a !important;
+}
+
+.button-energized {
+  background: #ecce55 !important;
+}
+
+.button-assertive {
+  background: #e74c3c !important;
+}
+
+.button-balanced, .button-positive, .button-dark, {
+    box-shadow:  0 4px 10px 0 rgba(0,0,0,.2),0 6px 10px 0 rgba(0,0,0,.19);
+  }
+
+.button-balanced:active, .button-positive:active, .button-dark:active, .button-energized:active, .button-assertive:active {
+    box-shadow:  0 2px 5px 0 rgba(0,0,0,.2),0 3px 5px 0 rgba(0,0,0,.19);
+    opacity: 1 !important;
+}
+
+.button-balanced:hover, .button-positive:hover, .button-dark:hover, .button-energized:hover, .button-assertive:hover {
+    box-shadow:  0 2px 5px 0 rgba(0,0,0,.2),0 3px 5px 0 rgba(0,0,0,.19);
+    opacity: 0.8;
+}

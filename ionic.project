@@ -1,6 +1,12 @@
 {
-  "name": "myToDoList",
-  "email": "",
+  "name": "stamplay-ionic-starter",
   "app_id": "",
-  "package_name": ""
+  "gulpStartupTasks": [
+    "sass",
+    "watch"
+  ],
+  "watchPatterns": [
+    "www/**/*",
+    "!www/lib/**/*"
+  ]
 }

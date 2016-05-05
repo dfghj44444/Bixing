@@ -1,0 +1,21 @@
+<ion-view>
+  <ion-nav-bar align-title="center" class="bar-light">
+    <ion-nav-back-button></ion-nav-back-button>
+    <ion-nav-title>
+      NEW TASK
+    </ion-nav-title>
+  </ion-nav-bar>
+  <ion-content>
+    <h1 class="account-title center-align">Add A New Task</h1>
+    <div class="list">
+      <label class="item item-input">
+        <input type="text" placeholder="Title" ng-model="new.task.title">
+      </label>
+      <label class="item item-input">
+        <input type="text" placeholder="Task Description" ng-model="new.task.body">
+      </label>
+      <button class="button button-full button-positive" ng-click="new.add()">Submit</button>
+    </div>
+
+  </ion-content>
+</ion-view>
